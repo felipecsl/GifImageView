@@ -37,7 +37,6 @@ protected void onStart() {
 @Override
 protected void onStop() {
     super.onStop();
-
     gifView.stopAnimation();
 }
 ```
