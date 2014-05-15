@@ -26,6 +26,7 @@ protected void onCreate(final Bundle savedInstanceState) {
 
     gifView = new GifImageView(context);
     gifView.setBytes(bitmapData);
+    setContentView(gifView);
 }
 
 @Override
