@@ -71,6 +71,10 @@ public class GifImageView extends ImageView implements Runnable {
         }
     }
 
+    public boolean isAnimating() {
+        return animating;
+    }
+
     public void stopAnimation() {
         animating = false;
 
