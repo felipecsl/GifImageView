@@ -1,0 +1,7 @@
+# 1.0.1
+
+* Adds ``isAnimating()`` that returns whether the gif animation is currently running.
+
+# 1.0.0
+
+Initial release
