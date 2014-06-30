@@ -725,14 +725,18 @@ public class GifDecoder {
 
         currentFrame.bufferFrameStart = rawData.position(); // Save this as the decoding position pointer
 
-        decodeBitmapData(null, mainPixels); // false decode pixel data to advance buffer
-        skip();
+        skipBitmapData();
         if (err()) {
             return;
         }
 
         frameCount++;
         frames.add(currentFrame); // add image to frame
+    }
+
+    private void skipBitmapData() {
+        read(); // code size
+        skip();
     }
 
     /**
