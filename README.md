@@ -42,6 +42,10 @@ protected void onStop() {
 }
 ```
 
+### Demo
+
+![](https://raw.githubusercontent.com/felipecsl/GifImageView/master/demo.gif)
+
 ### Contributing
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
