@@ -96,29 +96,34 @@ public class GifImageView extends ImageView implements Runnable {
 
     @Override
     public void run() {
-        final int n = gifDecoder.getFrameCount();
-        do {
-            for (int i = 0; i < n; i++) {
-                if (!animating)
-                    break;
-                try {
-                    tmpBitmap = gifDecoder.getNextFrame();
+        try {
+            final int n = gifDecoder.getFrameCount();
+            do {
+                for (int i = 0; i < n; i++) {
                     if (!animating)
                         break;
-                    handler.post(updateResults);
-                } catch (final ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
-                    Log.w(TAG, e);
+                    try {
+                        tmpBitmap = gifDecoder.getNextFrame();
+                        if (!animating)
+                            break;
+                        handler.post(updateResults);
+                    } catch (final ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
+                        Log.w(TAG, e);
+                    }
+                    if (!animating)
+                        break;
+                    gifDecoder.advance();
+                    try {
+                        Thread.sleep(gifDecoder.getNextDelay());
+                    } catch (final InterruptedException e) {
+                        // suppress
+                    }
                 }
-                if (!animating)
-                    break;
-                gifDecoder.advance();
-                try {
-                    Thread.sleep(gifDecoder.getNextDelay());
-                } catch (final InterruptedException e) {
-                    // suppress
-                }
-            }
-        } while (animating);
+            } while (animating);
+        } catch (Exception e) {
+            // probably a NullPointerException caused by clearing the GifImageView...
+            // just ignore it...
+        }
 
         if (shouldClear)
             handler.post(cleanupRunnable);
