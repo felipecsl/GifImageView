@@ -151,7 +151,8 @@ public class GifDecoder {
      * Move the animation frame counter forward
      */
     public void advance() {
-        framePointer = (framePointer + 1) % frameCount;
+        if (frameCount > 0)
+            framePointer = (framePointer + 1) % frameCount;
     }
 
     /**
