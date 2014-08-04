@@ -85,6 +85,7 @@ public class GifImageView extends ImageView implements Runnable {
     }
 
     public void clear() {
+        animating = false;
         shouldClear = true;
         stopAnimation();
         gifDecoder = null;
