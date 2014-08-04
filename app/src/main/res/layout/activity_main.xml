@@ -17,6 +17,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <Button
+        android:id="@+id/btnClear"
+        android:text="Clear GIF"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
     <com.felipecsl.gifimageview.library.GifImageView
         android:id="@+id/gifImageView"
         android:layout_gravity="center"

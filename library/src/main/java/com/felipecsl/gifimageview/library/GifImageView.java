@@ -14,16 +14,15 @@ public class GifImageView extends ImageView implements Runnable {
     private GifDecoder gifDecoder;
     private Bitmap tmpBitmap;
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private boolean animating = false;
-    private boolean shouldClear = false;
+    private boolean animating;
+    private boolean shouldClear;
     private Thread animationThread;
 
     private final Runnable updateResults = new Runnable() {
         @Override
         public void run() {
-            if (tmpBitmap != null && !tmpBitmap.isRecycled()) {
+            if (tmpBitmap != null && !tmpBitmap.isRecycled())
                 setImageBitmap(tmpBitmap);
-            }
         }
     };
 
@@ -35,6 +34,7 @@ public class GifImageView extends ImageView implements Runnable {
             tmpBitmap = null;
             gifDecoder = null;
             animationThread = null;
+            shouldClear = false;
         }
     };
 
@@ -88,7 +88,6 @@ public class GifImageView extends ImageView implements Runnable {
         animating = false;
         shouldClear = true;
         stopAnimation();
-        gifDecoder = null;
     }
 
     private boolean canStart() {
@@ -97,6 +96,11 @@ public class GifImageView extends ImageView implements Runnable {
 
     @Override
     public void run() {
+        if (shouldClear) {
+            handler.post(cleanupRunnable);
+            return;
+        }
+
         final int n = gifDecoder.getFrameCount();
         do {
             for (int i = 0; i < n; i++) {
@@ -120,8 +124,5 @@ public class GifImageView extends ImageView implements Runnable {
                 }
             }
         } while (animating);
-
-        if (shouldClear)
-            handler.post(cleanupRunnable);
     }
 }

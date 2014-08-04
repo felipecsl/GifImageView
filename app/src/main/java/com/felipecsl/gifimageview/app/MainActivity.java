@@ -13,6 +13,7 @@ import com.felipecsl.gifimageview.library.GifImageView;
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
     private GifImageView gifImageView;
+    private Button btnToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +21,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         gifImageView = (GifImageView) findViewById(R.id.gifImageView);
-        final Button btnToggle = (Button) findViewById(R.id.btnToggle);
+        btnToggle = (Button) findViewById(R.id.btnToggle);
+        final Button btnClear = (Button) findViewById(R.id.btnClear);
 
         btnToggle.setOnClickListener(this);
+        btnClear.setOnClickListener(this);
 
         new GifDataDownloader() {
             @Override
@@ -47,9 +50,13 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onClick(final View v) {
-        if (gifImageView.isAnimating())
-            gifImageView.stopAnimation();
-        else
-            gifImageView.startAnimation();
+        if (v.equals(btnToggle)) {
+            if (gifImageView.isAnimating())
+                gifImageView.stopAnimation();
+            else
+                gifImageView.startAnimation();
+        } else {
+            gifImageView.clear();
+        }
     }
 }
