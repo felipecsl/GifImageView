@@ -1,3 +1,7 @@
+# 1.0.3
+
+* PR #5: Fixes crashes when clearing the GIF bytes.
+
 # 1.0.2
 
 * PR #4: Replace false image data decoding in readContents with simple skipping.
