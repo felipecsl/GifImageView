@@ -162,7 +162,7 @@ public class GifDecoder {
      * @return delay in milliseconds
      */
     public int getDelay(final int n) {
-        int delay = -1;
+        int delay = 0;
         if ((n >= 0) && (n < frameCount)) {
             delay = frames.get(n).delay;
         }
@@ -174,7 +174,7 @@ public class GifDecoder {
      */
     public int getNextDelay() {
         if (frameCount <= 0 || framePointer < 0) {
-            return -1;
+            return 0;
         }
 
         return getDelay(framePointer);
