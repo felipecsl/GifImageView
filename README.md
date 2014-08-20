@@ -46,6 +46,8 @@ protected void onStop() {
 
 ![](https://raw.githubusercontent.com/felipecsl/GifImageView/master/demo.gif)
 
+Be sure to also check the [demo project](https://github.com/felipecsl/GifImageView/blob/master/app/src/main/java/com/felipecsl/gifimageview/app/MainActivity.java) for a sample of usage!
+
 ### Contributing
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet

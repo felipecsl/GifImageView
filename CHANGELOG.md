@@ -1,3 +1,7 @@
+# 1.0.4
+
+* Safer clear() routine to avoid null pointer exceptions.
+
 # 1.0.3
 
 * PR #5: Fixes crashes when clearing the GIF bytes.
