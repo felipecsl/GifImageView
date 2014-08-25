@@ -119,8 +119,9 @@ public class GifImageView extends ImageView implements Runnable {
                 gifDecoder.advance();
                 try {
                     Thread.sleep(gifDecoder.getNextDelay());
-                } catch (final InterruptedException e) {
-                    // suppress
+                } catch (final Exception e) {
+                    // suppress any exception
+                    // it can be InterruptedException or IllegalArgumentException
                 }
             }
         } while (animating);
