@@ -1,3 +1,7 @@
+# 1.0.5
+
+* Catch exceptions in ``GifImageView.run()``
+
 # 1.0.4
 
 * Safer clear() routine to avoid null pointer exceptions.
