@@ -294,7 +294,7 @@ public class GifDecoder {
     public int read(final byte[] data) {
         init();
         if (data != null) {
-            // Initiliaze the raw data buffer
+            // Initialiaze the raw data buffer
             rawData = ByteBuffer.wrap(data);
             rawData.rewind();
             rawData.order(ByteOrder.LITTLE_ENDIAN);
@@ -806,5 +806,13 @@ public class GifDecoder {
         do {
             readBlock();
         } while ((blockSize > 0) && !err());
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

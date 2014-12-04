@@ -2,6 +2,7 @@ package com.felipecsl.gifimageview.app;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.felipecsl.gifimageview.library.GifImageView;
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
+    private static final String TAG = "MainActivity";
     private GifImageView gifImageView;
     private Button btnToggle;
 
@@ -32,6 +34,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             protected void onPostExecute(final byte[] bytes) {
                 gifImageView.setBytes(bytes);
                 gifImageView.startAnimation();
+                Log.d(TAG, "GIF width is " + gifImageView.getGifWidth());
+                Log.d(TAG, "GIF height is " + gifImageView.getGifHeight());
             }
         }.execute("http://gifs.joelglovier.com/aha/aha.gif");
     }

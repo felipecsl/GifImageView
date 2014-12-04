@@ -1,3 +1,7 @@
+# 1.0.6
+
+* Adds methods ``getGifWidth()`` and ``getGifHeight()`` to ``GifImageView`` class.
+
 # 1.0.5
 
 * Catch exceptions in ``GifImageView.run()``
