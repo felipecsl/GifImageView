@@ -3,6 +3,8 @@ GifImageView
 
 Android ImageView that handles Animated GIF images
 
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-GifImageView-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/1339)
+
 ### Usage
 
 In your ``build.gradle`` file:
