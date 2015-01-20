@@ -48,7 +48,7 @@ Be sure to also check the [demo project](https://github.com/felipecsl/GifImageVi
 
 ### Caveats
 
-* Doesn't yet handle GIFs with transparency. Transparent channel will probably appear as black.
+* Doesn't yet handle GIFs with transparency. Transparent channel will probably appear as black. See Issue #11
 
 ### Contributing
 
