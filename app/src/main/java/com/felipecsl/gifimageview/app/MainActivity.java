@@ -1,5 +1,6 @@
 package com.felipecsl.gifimageview.app;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -16,6 +17,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private static final String TAG = "MainActivity";
     private GifImageView gifImageView;
     private Button btnToggle;
+    private Button btnBlur;
+
+    private boolean shouldBlur = false;
+    Blur blur;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +29,22 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         gifImageView = (GifImageView) findViewById(R.id.gifImageView);
         btnToggle = (Button) findViewById(R.id.btnToggle);
+        btnBlur = (Button) findViewById(R.id.btnBlur);
         final Button btnClear = (Button) findViewById(R.id.btnClear);
+
+        blur = Blur.newInstance(this);
+        gifImageView.setOnFrameAvailable(new GifImageView.OnFrameAvailable() {
+            @Override
+            public Bitmap onFrameAvailable(Bitmap bitmap) {
+                if (shouldBlur)
+                    return blur.blur(bitmap);
+                return bitmap;
+            }
+        });
 
         btnToggle.setOnClickListener(this);
         btnClear.setOnClickListener(this);
+        btnBlur.setOnClickListener(this);
 
         new GifDataDownloader() {
             @Override
@@ -59,6 +76,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 gifImageView.stopAnimation();
             else
                 gifImageView.startAnimation();
+        } else if (v.equals(btnBlur)) {
+            shouldBlur = !shouldBlur;
         } else {
             gifImageView.clear();
         }
