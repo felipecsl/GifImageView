@@ -11,7 +11,7 @@ In your ``build.gradle`` file:
 
 ```groovy
 dependencies {
-    compile 'com.felipecsl:gifimageview:1.0.6'
+    compile 'com.felipecsl:gifimageview:1.1.0'
 }
 ```
 
@@ -38,6 +38,18 @@ protected void onStop() {
     super.onStop();
     gifView.stopAnimation();
 }
+```
+
+If you need to post-process the GIF frames, you can do that via ``GifImageView.setOnFrameAvailable()``.
+You can see an example of that in the sample app included on the repository.
+
+```java
+gifImageView.setOnFrameAvailable(new GifImageView.OnFrameAvailable() {
+    @Override
+    public Bitmap onFrameAvailable(Bitmap bitmap) {
+        return blurFilter.blur(bitmap);
+    }
+});
 ```
 
 ### Demo

@@ -1,3 +1,7 @@
+# 1.1.0
+
+* Adds support to ``OnFrameAvailable`` callback, thanks to @luciofm.
+
 # 1.0.6
 
 * Adds methods ``getGifWidth()`` and ``getGifHeight()`` to ``GifImageView`` class.
