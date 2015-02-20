@@ -17,6 +17,7 @@ public class GifImageView extends ImageView implements Runnable {
     private boolean animating;
     private boolean shouldClear;
     private Thread animationThread;
+    private OnFrameAvailable frameCallback = null;
 
     private final Runnable updateResults = new Runnable() {
         @Override
@@ -116,6 +117,9 @@ public class GifImageView extends ImageView implements Runnable {
                     break;
                 try {
                     tmpBitmap = gifDecoder.getNextFrame();
+                    if (frameCallback != null)
+                        tmpBitmap = frameCallback.onFrameAvailable(tmpBitmap);
+
                     if (!animating)
                         break;
                     handler.post(updateResults);
@@ -133,5 +137,17 @@ public class GifImageView extends ImageView implements Runnable {
                 }
             }
         } while (animating);
+    }
+
+    public OnFrameAvailable getOnFrameAvailable() {
+        return frameCallback;
+    }
+
+    public void setOnFrameAvailable(OnFrameAvailable frameProcessor) {
+        this.frameCallback = frameProcessor;
+    }
+
+    public interface OnFrameAvailable {
+        public Bitmap onFrameAvailable(Bitmap bitmap);
     }
 }
