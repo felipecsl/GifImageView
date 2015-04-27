@@ -11,7 +11,7 @@ In your ``build.gradle`` file:
 
 ```groovy
 dependencies {
-    compile 'com.felipecsl:gifimageview:1.1.0'
+    compile 'com.felipecsl:gifimageview:1.2.0'
 }
 ```
 
@@ -73,5 +73,5 @@ Be sure to also check the [demo project](https://github.com/felipecsl/GifImageVi
 
 ### Copyright and license
 
-Code and documentation copyright 2011-2014 Felipe Lima.
+Code and documentation copyright 2011-2015 Felipe Lima.
 Code released under the [MIT license](https://github.com/felipecsl/GifImageView/blob/master/LICENSE.txt).
