@@ -1,3 +1,7 @@
+# 1.2.0
+
+* Adds support for custom frame display duration via `setFramesDisplayDuration()`, thanks to @donvigo
+
 # 1.1.0
 
 * Adds support to ``OnFrameAvailable`` callback, thanks to @luciofm.
