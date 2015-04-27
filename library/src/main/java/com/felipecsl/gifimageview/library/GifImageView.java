@@ -18,6 +18,7 @@ public class GifImageView extends ImageView implements Runnable {
     private boolean shouldClear;
     private Thread animationThread;
     private OnFrameAvailable frameCallback = null;
+    private long framesDisplayDuration = -1l;
 
     private final Runnable updateResults = new Runnable() {
         @Override
@@ -61,6 +62,18 @@ public class GifImageView extends ImageView implements Runnable {
             animationThread = new Thread(this);
             animationThread.start();
         }
+    }
+
+    public long getFramesDisplayDuration() {
+        return framesDisplayDuration;
+    }
+
+    /**
+     * Sets custom display duration in milliseconds for the all frames. Should be called before {@link #startAnimation()}
+     * @param framesDisplayDuration Duration in milliseconds. Default value = -1, this property will be ignored and default delay from gif file will be used.
+     */
+    public void setFramesDisplayDuration(long framesDisplayDuration) {
+        this.framesDisplayDuration = framesDisplayDuration;
     }
 
     public void startAnimation() {
@@ -130,7 +143,7 @@ public class GifImageView extends ImageView implements Runnable {
                     break;
                 gifDecoder.advance();
                 try {
-                    Thread.sleep(gifDecoder.getNextDelay());
+                    Thread.sleep(framesDisplayDuration > 0 ? framesDisplayDuration : gifDecoder.getNextDelay());
                 } catch (final Exception e) {
                     // suppress any exception
                     // it can be InterruptedException or IllegalArgumentException
