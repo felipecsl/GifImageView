@@ -1,15 +1,19 @@
 package com.felipecsl.gifimageview.app;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.felipecsl.gifimageview.library.GifImageView;
+import com.felipecsl.gifimageview.library.GifImageView.OnAnimationStop;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
@@ -42,19 +46,42 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             }
         });
 
+        gifImageView.setOnAnimationStop(new OnAnimationStop() {
+            @Override
+            public void onStop() {
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, "Animation ended", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
         btnToggle.setOnClickListener(this);
         btnClear.setOnClickListener(this);
         btnBlur.setOnClickListener(this);
 
-        new GifDataDownloader() {
-            @Override
-            protected void onPostExecute(final byte[] bytes) {
-                gifImageView.setBytes(bytes);
-                gifImageView.startAnimation();
-                Log.d(TAG, "GIF width is " + gifImageView.getGifWidth());
-                Log.d(TAG, "GIF height is " + gifImageView.getGifHeight());
-            }
-        }.execute("http://gifs.joelglovier.com/aha/aha.gif");
+        try {
+            InputStream buf = getAssets().open("chop.gif");
+            byte[] bytes = new byte[buf.available()];
+            buf.read(bytes);
+            gifImageView.setBytes(bytes);
+            gifImageView.startAnimation();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        new GifDataDownloader() {
+//            @Override
+//            protected void onPostExecute(final byte[] bytes) {
+//                gifImageView.setBytes(bytes);
+//                gifImageView.startAnimation();
+//                Log.d(TAG, "GIF width is " + gifImageView.getGifWidth());
+//                Log.d(TAG, "GIF height is " + gifImageView.getGifHeight());
+//            }
+//        }.execute("http://gifs.joelglovier.com/aha/aha.gif");
     }
 
 

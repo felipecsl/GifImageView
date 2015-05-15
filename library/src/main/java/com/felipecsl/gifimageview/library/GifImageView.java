@@ -149,16 +149,21 @@ public class GifImageView extends ImageView implements Runnable {
         if (!animating) {
           break;
         }
-        gifDecoder.advance();
+        animating = gifDecoder.advance();
         try {
           Thread
-              .sleep(framesDisplayDuration > 0 ? framesDisplayDuration : gifDecoder.getNextDelay());
+                  .sleep(framesDisplayDuration > 0 ? framesDisplayDuration : gifDecoder.getNextDelay());
         } catch (final Exception e) {
           // suppress any exception
           // it can be InterruptedException or IllegalArgumentException
         }
       }
     } while (animating);
+
+    if (animationCallback != null) {
+      animationCallback.onStop();
+      animationThread = null;
+    }
   }
 
   public OnFrameAvailable getOnFrameAvailable() {
@@ -172,5 +177,15 @@ public class GifImageView extends ImageView implements Runnable {
   public interface OnFrameAvailable {
 
     Bitmap onFrameAvailable(Bitmap bitmap);
+  }
+
+  private OnAnimationStop animationCallback;
+
+  public interface OnAnimationStop {
+    void onStop();
+  }
+
+  public void setOnAnimationStop(OnAnimationStop animationCallback) {
+    this.animationCallback = animationCallback;
   }
 }
