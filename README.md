@@ -58,10 +58,6 @@ gifImageView.setOnFrameAvailable(new GifImageView.OnFrameAvailable() {
 
 Be sure to also check the [demo project](https://github.com/felipecsl/GifImageView/blob/master/app/src/main/java/com/felipecsl/gifimageview/app/MainActivity.java) for a sample of usage!
 
-### Caveats
-
-* Doesn't yet handle GIFs with transparency. Transparent channel will probably appear as black. See Issue #11
-
 ### Contributing
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
