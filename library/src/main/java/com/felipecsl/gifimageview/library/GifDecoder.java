@@ -763,8 +763,8 @@ public class GifDecoder {
       mainScratch = new int[width * height];
       copyScratch = new int[width * height];
 
-      previousImage = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-      currentImage = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+      previousImage = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+      currentImage = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
     } catch (final OutOfMemoryError e) {
       // Try with halving down the bitmap size
       final int dimension = (width * height) / 2;
@@ -772,8 +772,8 @@ public class GifDecoder {
       mainScratch = new int[dimension];
       copyScratch = new int[dimension];
 
-      previousImage = Bitmap.createBitmap(width / 2, height / 2, Bitmap.Config.RGB_565);
-      currentImage = Bitmap.createBitmap(width / 2, height / 2, Bitmap.Config.RGB_565);
+      previousImage = Bitmap.createBitmap(width / 2, height / 2, Bitmap.Config.ARGB_4444);
+      currentImage = Bitmap.createBitmap(width / 2, height / 2, Bitmap.Config.ARGB_4444);
     }
   }
 
