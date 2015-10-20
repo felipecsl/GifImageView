@@ -698,6 +698,8 @@ public class GifDecoder {
     }
     currentFrame.transparency = (packed & 1) != 0;
     currentFrame.delay = readShort() * 10; // delay in milliseconds
+    if(currentFrame.delay<=10)
+      currentFrame.delay=100;
     currentFrame.transIndex = read(); // transparent color index
     read(); // block terminator
   }
