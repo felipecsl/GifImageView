@@ -133,8 +133,12 @@ public class GifImageView extends ImageView implements Runnable {
         if (!animating) {
           break;
         }
+        //milliseconds spent on frame decode
+        long frameDecodeTime = 0;
         try {
+          long before = System.nanoTime();
           tmpBitmap = gifDecoder.getNextFrame();
+          frameDecodeTime = (System.nanoTime() - before) / 1000000;
           if (frameCallback != null) {
             tmpBitmap = frameCallback.onFrameAvailable(tmpBitmap);
           }
@@ -151,8 +155,15 @@ public class GifImageView extends ImageView implements Runnable {
         }
         gifDecoder.advance();
         try {
-          Thread
-              .sleep(framesDisplayDuration > 0 ? framesDisplayDuration : gifDecoder.getNextDelay());
+          int delay = gifDecoder.getNextDelay();
+          // Sleep for frame duration minus time already spent on frame decode
+          // Actually we need next frame decode duration here,
+          // but I use previous frame time to make code more readable
+          delay -= frameDecodeTime;
+          if (delay > 0) {
+            Thread
+              .sleep(framesDisplayDuration > 0 ? framesDisplayDuration : delay);
+          }
         } catch (final Exception e) {
           // suppress any exception
           // it can be InterruptedException or IllegalArgumentException
