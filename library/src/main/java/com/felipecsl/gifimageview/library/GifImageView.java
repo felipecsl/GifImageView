@@ -134,11 +134,11 @@ public class GifImageView extends ImageView implements Runnable {
           break;
         }
         //milliseconds spent on frame decode
-        long frame_decode_time = 0;
+        long frameDecodeTime = 0;
         try {
           long before = System.nanoTime();
           tmpBitmap = gifDecoder.getNextFrame();
-          frame_decode_time=(System.nanoTime()-before)/1000000;
+          frameDecodeTime = (System.nanoTime() - before) / 1000000;
           if (frameCallback != null) {
             tmpBitmap = frameCallback.onFrameAvailable(tmpBitmap);
           }
@@ -159,7 +159,7 @@ public class GifImageView extends ImageView implements Runnable {
           // Sleep for frame duration minus time already spent on frame decode
           // Actually we need next frame decode duration here,
           // but I use previous frame time to make code more readable
-          delay -= frame_decode_time;
+          delay -= frameDecodeTime;
           if (delay > 0) {
             Thread
               .sleep(framesDisplayDuration > 0 ? framesDisplayDuration : delay);
