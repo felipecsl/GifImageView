@@ -11,7 +11,7 @@ In your ``build.gradle`` file:
 
 ```groovy
 dependencies {
-    compile 'com.felipecsl:gifimageview:1.2.0'
+    compile 'com.felipecsl:gifimageview:2.0.0'
 }
 ```
 
@@ -22,9 +22,8 @@ In your Activity class:
 protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    gifView = new GifImageView(context);
+    gifView = (GifImageView) findViewById(R.id.gifImageView);
     gifView.setBytes(bitmapData);
-    setContentView(gifView);
 }
 
 @Override
