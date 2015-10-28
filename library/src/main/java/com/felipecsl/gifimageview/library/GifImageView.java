@@ -32,9 +32,6 @@ public class GifImageView extends ImageView implements Runnable {
   private final Runnable cleanupRunnable = new Runnable() {
     @Override
     public void run() {
-      if (tmpBitmap != null && !tmpBitmap.isRecycled()) {
-        tmpBitmap.recycle();
-      }
       tmpBitmap = null;
       gifDecoder = null;
       animationThread = null;
@@ -108,6 +105,7 @@ public class GifImageView extends ImageView implements Runnable {
     animating = false;
     shouldClear = true;
     stopAnimation();
+    handler.post(cleanupRunnable);
   }
 
   private boolean canStart() {
