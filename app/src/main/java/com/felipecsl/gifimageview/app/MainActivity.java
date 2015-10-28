@@ -2,7 +2,7 @@ package com.felipecsl.gifimageview.app;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,19 +11,15 @@ import android.widget.Button;
 
 import com.felipecsl.gifimageview.library.GifImageView;
 
-
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
-
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
   private static final String TAG = "MainActivity";
   private GifImageView gifImageView;
   private Button btnToggle;
   private Button btnBlur;
-
   private boolean shouldBlur = false;
-  Blur blur;
+  private Blur blur;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
@@ -36,8 +32,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     gifImageView.setOnFrameAvailable(new GifImageView.OnFrameAvailable() {
       @Override
       public Bitmap onFrameAvailable(Bitmap bitmap) {
-        if (shouldBlur)
+        if (shouldBlur) {
           return blur.blur(bitmap);
+        }
         return bitmap;
       }
     });
@@ -47,31 +44,26 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     btnBlur.setOnClickListener(this);
 
     new GifDataDownloader() {
-      @Override
-      protected void onPostExecute(final byte[] bytes) {
+      @Override protected void onPostExecute(final byte[] bytes) {
         gifImageView.setBytes(bytes);
         gifImageView.startAnimation();
         Log.d(TAG, "GIF width is " + gifImageView.getGifWidth());
         Log.d(TAG, "GIF height is " + gifImageView.getGifHeight());
       }
-    }.execute(
-        "https://www.thinkful.com/learn/static/guides/intro-to-jquery/images/ryu_animated.gif");
+    }.execute("http://katemobile.ru/tmp/sample3.gif");
   }
 
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.main, menu);
     return true;
   }
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
     return super.onOptionsItemSelected(item);
   }
 
-  @Override
-  public void onClick(final View v) {
+  @Override public void onClick(final View v) {
     if (v.equals(btnToggle)) {
       if (gifImageView.isAnimating())
         gifImageView.stopAnimation();

@@ -54,6 +54,7 @@ public class GifImageView extends ImageView implements Runnable {
     gifDecoder = new GifDecoder();
     try {
       gifDecoder.read(bytes);
+      gifDecoder.advance();
     } catch (final OutOfMemoryError e) {
       gifDecoder = null;
       Log.e(TAG, e.getMessage(), e);
@@ -161,8 +162,7 @@ public class GifImageView extends ImageView implements Runnable {
           // but I use previous frame time to make code more readable
           delay -= frameDecodeTime;
           if (delay > 0) {
-            Thread
-              .sleep(framesDisplayDuration > 0 ? framesDisplayDuration : delay);
+            Thread.sleep(framesDisplayDuration > 0 ? framesDisplayDuration : delay);
           }
         } catch (final Exception e) {
           // suppress any exception
@@ -181,7 +181,6 @@ public class GifImageView extends ImageView implements Runnable {
   }
 
   public interface OnFrameAvailable {
-
     Bitmap onFrameAvailable(Bitmap bitmap);
   }
 }
