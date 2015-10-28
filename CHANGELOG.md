@@ -1,3 +1,8 @@
+# 2.0.0 (10.27/2015)
+
+* Ported the `GifDecoder` implementation from [Glide](https://github.com/bumptech/glide) which fixes
+a most GIF weirdnesses and bugs.
+
 # 1.2.0
 
 * Adds support for custom frame display duration via `setFramesDisplayDuration()`, thanks to @donvigo
