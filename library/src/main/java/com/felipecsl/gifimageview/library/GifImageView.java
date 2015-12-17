@@ -18,7 +18,7 @@ public class GifImageView extends ImageView implements Runnable {
   private boolean shouldClear;
   private Thread animationThread;
   private OnFrameAvailable frameCallback = null;
-  private long framesDisplayDuration = -1l;
+  private long framesDisplayDuration = -1L;
 
   private final Runnable updateResults = new Runnable() {
     @Override
