@@ -62,6 +62,8 @@ public class GifImageView extends ImageView implements Runnable {
     if (canStart()) {
       animationThread = new Thread(this);
       animationThread.start();
+    } else {
+      gotoFrame(0);
     }
   }
 
@@ -102,6 +104,18 @@ public class GifImageView extends ImageView implements Runnable {
     }
   }
 
+  public void gotoFrame(int frame){
+    if(gifDecoder.setFrameIndex(frame) && !animating){
+      processFrame();
+      gifDecoder.advance();
+    }
+  }
+
+  public void resetAnimation(){
+    gifDecoder.resetLoopIndex();
+    gotoFrame(0);
+  }
+
   public void clear() {
     animating = false;
     shouldClear = true;
@@ -135,21 +149,10 @@ public class GifImageView extends ImageView implements Runnable {
         }
         //milliseconds spent on frame decode
         long frameDecodeTime = 0;
-        try {
-          long before = System.nanoTime();
-          tmpBitmap = gifDecoder.getNextFrame();
-          frameDecodeTime = (System.nanoTime() - before) / 1000000;
-          if (frameCallback != null) {
-            tmpBitmap = frameCallback.onFrameAvailable(tmpBitmap);
-          }
+        long before = System.nanoTime();
+        processFrame();
+        frameDecodeTime = (System.nanoTime() - before) / 1000000;
 
-          if (!animating) {
-            break;
-          }
-          handler.post(updateResults);
-        } catch (final ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
-          Log.w(TAG, e);
-        }
         if (!animating || !gifDecoder.advance()) {
           animating = false;
           break;
@@ -202,6 +205,18 @@ public class GifImageView extends ImageView implements Runnable {
   protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
     clear();
+  }
+
+  protected void processFrame() {
+    try {
+      tmpBitmap = gifDecoder.getNextFrame();
+      if (frameCallback != null) {
+        tmpBitmap = frameCallback.onFrameAvailable(tmpBitmap);
+      }
+      handler.post(updateResults);
+    } catch (final ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
+      Log.w(TAG, e);
+    }
   }
 
 }

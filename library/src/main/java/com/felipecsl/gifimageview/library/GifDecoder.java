@@ -286,6 +286,17 @@ class GifDecoder {
   }
 
   /**
+   * Sets the frame pointer to a specific frame
+   *
+   * @return boolean true if the move was successful
+   */
+  boolean setFrameIndex(int frame) {
+    if(frame < 0 || frame >= getFrameCount()) return false;
+    framePointer = frame;
+    return true;
+  }
+
+  /**
    * Resets the frame pointer to before the 0th frame, as if we'd never used this decoder to
    * decode any frames.
    */
