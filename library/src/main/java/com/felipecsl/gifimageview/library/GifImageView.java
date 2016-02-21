@@ -150,10 +150,10 @@ public class GifImageView extends ImageView implements Runnable {
         } catch (final ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
           Log.w(TAG, e);
         }
-        if (!animating) {
+        if (!animating || !gifDecoder.advance()) {
+          animating = false;
           break;
         }
-        gifDecoder.advance();
         try {
           int delay = gifDecoder.getNextDelay();
           // Sleep for frame duration minus time already spent on frame decode
