@@ -237,9 +237,12 @@ class GifDecoder {
       loopIndex++;
     }
 
-    framePointer = (framePointer + 1) % header.frameCount;
+    if(header.loopCount != LOOP_FOREVER && loopIndex >= header.loopCount){
+      return false;
+    }
 
-    return header.loopCount == LOOP_FOREVER || loopIndex < header.loopCount;
+    framePointer = (framePointer + 1) % header.frameCount;
+    return true;
   }
 
   /**
@@ -291,7 +294,7 @@ class GifDecoder {
    * @return boolean true if the move was successful
    */
   boolean setFrameIndex(int frame) {
-    if(frame < 0 || frame >= getFrameCount()) return false;
+    if(frame < INITIAL_FRAME_POINTER || frame >= getFrameCount()) return false;
     framePointer = frame;
     return true;
   }
