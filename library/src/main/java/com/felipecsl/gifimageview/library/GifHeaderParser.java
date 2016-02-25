@@ -358,11 +358,14 @@ public class GifHeaderParser {
    * Skips variable length blocks up to and including next zero length block.
    */
   private void skip() {
-    int blockSize;
-    do {
-      blockSize = read();
-      rawData.position(rawData.position() + blockSize);
-    } while (blockSize > 0);
+    try {
+      int blockSize;
+      do {
+        blockSize = read();
+        rawData.position(rawData.position() + blockSize);
+      } while (blockSize > 0);
+    } catch (IllegalArgumentException ex) {
+    }
   }
 
   /**
