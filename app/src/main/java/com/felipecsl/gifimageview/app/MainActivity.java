@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.felipecsl.gifimageview.library.GifImageView;
 
@@ -37,6 +38,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
           return blur.blur(bitmap);
         }
         return bitmap;
+      }
+    });
+
+    gifImageView.setOnAnimationStop(new GifImageView.OnAnimationStop() {
+      @Override public void onAnimationStop() {
+        runOnUiThread(new Runnable() {
+          @Override public void run() {
+            Toast.makeText(MainActivity.this, "Animation stopped", Toast.LENGTH_SHORT).show();
+          }
+        });
       }
     });
 

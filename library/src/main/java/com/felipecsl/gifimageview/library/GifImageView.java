@@ -19,6 +19,7 @@ public class GifImageView extends ImageView implements Runnable {
   private Thread animationThread;
   private OnFrameAvailable frameCallback = null;
   private long framesDisplayDuration = -1L;
+  private OnAnimationStop animationStopCallback = null;
 
   private final Runnable updateResults = new Runnable() {
     @Override
@@ -168,6 +169,9 @@ public class GifImageView extends ImageView implements Runnable {
         }
       }
     } while (animating);
+    if (animationStopCallback != null) {
+      animationStopCallback.onAnimationStop();
+    }
   }
 
   public OnFrameAvailable getOnFrameAvailable() {
@@ -181,4 +185,17 @@ public class GifImageView extends ImageView implements Runnable {
   public interface OnFrameAvailable {
     Bitmap onFrameAvailable(Bitmap bitmap);
   }
+
+  public OnAnimationStop getOnAnimationStop() {
+    return animationStopCallback;
+  }
+
+  public void setOnAnimationStop(OnAnimationStop animationStop) {
+    this.animationStopCallback = animationStop;
+  }
+
+  public interface OnAnimationStop {
+    void onAnimationStop();
+  }
+
 }
