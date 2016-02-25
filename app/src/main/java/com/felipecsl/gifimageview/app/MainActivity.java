@@ -1,5 +1,6 @@
 package com.felipecsl.gifimageview.app;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -60,6 +61,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.show_grid) {
+      startActivity(new Intent(this, GridViewActivity.class));
+      return true;
+    }
     return super.onOptionsItemSelected(item);
   }
 
