@@ -49,6 +49,7 @@ public class GifGridAdapter extends BaseAdapter {
       imageView.setLayoutParams(layoutParams);
     } else {
       imageView = (GifImageView) convertView;
+      imageView.clear();
     }
     new GifDataDownloader() {
       @Override
