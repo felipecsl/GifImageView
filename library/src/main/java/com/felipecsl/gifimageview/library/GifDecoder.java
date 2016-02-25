@@ -226,7 +226,9 @@ class GifDecoder {
    * Move the animation frame counter forward.
    */
   void advance() {
-    framePointer = (framePointer + 1) % header.frameCount;
+    if (header.frameCount > 0) {
+      framePointer = (framePointer + 1) % header.frameCount;
+    }
   }
 
   /**

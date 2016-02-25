@@ -3,4 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity" >
 
+    <item android:id="@+id/show_grid"
+        app:showAsAction="never"
+        android:title="@string/grid_example" />
+
+
 </menu>
