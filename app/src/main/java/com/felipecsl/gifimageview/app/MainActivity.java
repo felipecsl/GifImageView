@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     gifImageView.setOnAnimationStop(new GifImageView.OnAnimationStop() {
       @Override public void onAnimationStop() {
-        MainActivity.this.runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
           @Override public void run() {
             Toast.makeText(MainActivity.this, "Animation stopped", Toast.LENGTH_SHORT).show();
           }
