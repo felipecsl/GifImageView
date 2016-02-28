@@ -198,4 +198,10 @@ public class GifImageView extends ImageView implements Runnable {
     void onAnimationStop();
   }
 
+  @Override
+  protected void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+    clear();
+  }
+
 }
