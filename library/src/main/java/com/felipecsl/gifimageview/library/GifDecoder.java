@@ -233,11 +233,11 @@ class GifDecoder {
   boolean advance() {
     if (header.frameCount <= 0) return false;
 
-    if(framePointer == getFrameCount() - 1){
+    if(framePointer == getFrameCount() - 1) {
       loopIndex++;
     }
 
-    if(header.loopCount != LOOP_FOREVER && loopIndex >= header.loopCount){
+    if(header.loopCount != LOOP_FOREVER && loopIndex >= header.loopCount) {
       return false;
     }
 
