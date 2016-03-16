@@ -95,7 +95,7 @@ class GifDecoder {
 
   private static final int INITIAL_FRAME_POINTER = -1;
 
-  static final int LOOP_FOREVER = 0;
+  static final int LOOP_FOREVER = -1;
 
   private static final int BYTES_PER_INTEGER = 4;
 
@@ -239,7 +239,7 @@ class GifDecoder {
       loopIndex++;
     }
 
-    if(header.loopCount != LOOP_FOREVER && loopIndex >= header.loopCount) {
+    if(header.loopCount != LOOP_FOREVER && loopIndex > header.loopCount) {
       return false;
     }
 
