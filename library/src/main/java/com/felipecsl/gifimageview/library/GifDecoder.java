@@ -231,7 +231,9 @@ class GifDecoder {
    * @return boolean specifying if animation should continue or if loopCount has been fulfilled.
    */
   boolean advance() {
-    if (header.frameCount <= 0) return false;
+    if (header.frameCount <= 0) {
+      return false;
+    }
 
     if(framePointer == getFrameCount() - 1) {
       loopIndex++;
@@ -294,7 +296,9 @@ class GifDecoder {
    * @return boolean true if the move was successful
    */
   boolean setFrameIndex(int frame) {
-    if(frame < INITIAL_FRAME_POINTER || frame >= getFrameCount()) return false;
+    if(frame < INITIAL_FRAME_POINTER || frame >= getFrameCount()) {
+      return false;
+    }
     framePointer = frame;
     return true;
   }
