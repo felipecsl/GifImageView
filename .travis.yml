@@ -1,0 +1,29 @@
+language: android
+android:
+  components:
+  - tools
+  - platform-tools
+  - build-tools-23.0.2
+  - android-23
+  - extra-android-m2repository
+  - extra-android-support
+  - extra-google-m2repository
+after_success:
+- ".buildscript/deploy_snapshot.sh"
+jdk:
+- oraclejdk7
+- oraclejdk8
+branches:
+  except:
+  - gh-pages
+notifications:
+  email: false
+script: "./gradlew clean check"
+sudo: false
+cache:
+  directories:
+  - "$HOME/.m2"
+env:
+  global:
+  - secure: TPzHKYKcPm/u4+rOWDmHXJ80cyYckqtJkdh+94NePdSXjjaKn7KeS3XbSguQnlmQqpt/iQ5KN0lVQK3rGUHugw8ZynoPUNgf3wH9ZhcAqrd3m41dWvNwEexBtNJt/XX3D2xsa1083iRuJntHhMOodh/uuwsc30hVibjMsCyQKQk=
+  - secure: idTB9agcZHiB8DA0vgASUSxYTyXPU1pdMTwVet3DZ372rbxsRJMQg1DJn77NrldxAfX53sB5xtCwpRFyg0xoPYZJXfq/uTSA2Ym7kjFc2miVjhVHubn4CCWkazLjvkeLeuXrXa6poRA6VD1WTLDYw8HKcT2J19sWWkhtR0tDqGE=
