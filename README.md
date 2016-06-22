@@ -12,7 +12,7 @@ In your ``build.gradle`` file:
 
 ```groovy
 dependencies {
-    compile 'com.felipecsl:gifimageview:2.0.0'
+    compile 'com.felipecsl:gifimageview:2.1.0'
 }
 ```
 
