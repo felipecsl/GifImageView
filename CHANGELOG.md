@@ -1,4 +1,12 @@
-# 2.0.0 (10.27/2015)
+# 2.1.0 (06/22/2016)
+
+* Fix (#34): Clear animation when detached from the window
+* New (#18): On stop callback for when animation completes
+* Fix (#36): Division by Zero Exception
+* Fix (#37): IllegalArgumentException due to overflowing buffer length
+* Fix (#28): Memory leak in cleanupRunnable
+
+# 2.0.0 (10/27/2015)
 
 * Ported the `GifDecoder` implementation from [Glide](https://github.com/bumptech/glide) which fixes
 most of the gif weirdnesses and bugs.
