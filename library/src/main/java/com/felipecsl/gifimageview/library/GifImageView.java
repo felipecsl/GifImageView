@@ -153,7 +153,6 @@ public class GifImageView extends ImageView implements Runnable {
         if (!animating) {
           break;
         }
-        gifDecoder.advance();
         try {
           int delay = gifDecoder.getNextDelay();
           // Sleep for frame duration minus time already spent on frame decode
@@ -163,6 +162,7 @@ public class GifImageView extends ImageView implements Runnable {
           if (delay > 0) {
             Thread.sleep(framesDisplayDuration > 0 ? framesDisplayDuration : delay);
           }
+          gifDecoder.advance();
         } catch (final Exception e) {
           // suppress any exception
           // it can be InterruptedException or IllegalArgumentException
