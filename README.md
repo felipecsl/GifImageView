@@ -52,6 +52,8 @@ gifImageView.setOnFrameAvailable(new GifImageView.OnFrameAvailable() {
 });
 ```
 
+You can also reset an animation to play again from the beginning `gifImageView.resetAnimation();` or show a specific frame of the animation `gifImageView.gotoFrame(3)`;
+
 ### Demo
 
 ![](https://raw.githubusercontent.com/felipecsl/GifImageView/master/demo.gif)

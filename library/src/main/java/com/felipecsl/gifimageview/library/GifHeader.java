@@ -52,7 +52,7 @@ public class GifHeader {
   int pixelAspect;
   //TODO: this is set both during reading the header and while decoding frames...
   int bgColor;
-  int loopCount;
+  int loopCount = 0;
 
   public int getHeight() {
     return height;

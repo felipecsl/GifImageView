@@ -15,6 +15,7 @@ public class GifImageView extends ImageView implements Runnable {
   private Bitmap tmpBitmap;
   private final Handler handler = new Handler(Looper.getMainLooper());
   private boolean animating;
+  private boolean renderFrame;
   private boolean shouldClear;
   private Thread animationThread;
   private OnFrameAvailable frameCallback = null;
@@ -52,16 +53,16 @@ public class GifImageView extends ImageView implements Runnable {
     gifDecoder = new GifDecoder();
     try {
       gifDecoder.read(bytes);
-      gifDecoder.advance();
-    } catch (final OutOfMemoryError e) {
+    } catch (final Exception e) {
       gifDecoder = null;
       Log.e(TAG, e.getMessage(), e);
       return;
     }
 
-    if (canStart()) {
-      animationThread = new Thread(this);
-      animationThread.start();
+    if(animating){
+      startAnimationThread();
+    } else {
+      gotoFrame(0);
     }
   }
 
@@ -82,11 +83,7 @@ public class GifImageView extends ImageView implements Runnable {
 
   public void startAnimation() {
     animating = true;
-
-    if (canStart()) {
-      animationThread = new Thread(this);
-      animationThread.start();
-    }
+    startAnimationThread();
   }
 
   public boolean isAnimating() {
@@ -102,15 +99,29 @@ public class GifImageView extends ImageView implements Runnable {
     }
   }
 
+  public void gotoFrame(int frame){
+    if(gifDecoder.getCurrentFrameIndex() == frame) return;
+    if(gifDecoder.setFrameIndex(frame-1) && !animating){
+      renderFrame = true;
+      startAnimationThread();
+    }
+  }
+
+  public void resetAnimation(){
+    gifDecoder.resetLoopIndex();
+    gotoFrame(0);
+  }
+
   public void clear() {
     animating = false;
+    renderFrame = false;
     shouldClear = true;
     stopAnimation();
     handler.post(cleanupRunnable);
   }
 
   private boolean canStart() {
-    return animating && gifDecoder != null && animationThread == null;
+    return (animating || renderFrame) && gifDecoder != null && animationThread == null;
   }
 
   public int getGifWidth() {
@@ -122,53 +133,50 @@ public class GifImageView extends ImageView implements Runnable {
   }
 
   @Override public void run() {
-    if (shouldClear) {
-      handler.post(cleanupRunnable);
-      return;
-    }
-
-    final int n = gifDecoder.getFrameCount();
     do {
-      for (int i = 0; i < n; i++) {
-        if (!animating) {
-          break;
-        }
-        //milliseconds spent on frame decode
-        long frameDecodeTime = 0;
-        try {
-          long before = System.nanoTime();
-          tmpBitmap = gifDecoder.getNextFrame();
-          frameDecodeTime = (System.nanoTime() - before) / 1000000;
-          if (frameCallback != null) {
-            tmpBitmap = frameCallback.onFrameAvailable(tmpBitmap);
-          }
+      if (!animating && !renderFrame) {
+        break;
+      }
+      boolean advance = gifDecoder.advance();
 
-          if (!animating) {
-            break;
-          }
-          handler.post(updateResults);
-        } catch (final ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
-          Log.w(TAG, e);
+      //milliseconds spent on frame decode
+      long frameDecodeTime = 0;
+      try {
+        long before = System.nanoTime();
+        tmpBitmap = gifDecoder.getNextFrame();
+        if (frameCallback != null) {
+          tmpBitmap = frameCallback.onFrameAvailable(tmpBitmap);
         }
-        if (!animating) {
-          break;
+        frameDecodeTime = (System.nanoTime() - before) / 1000000;
+        handler.post(updateResults);
+      } catch (final ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
+        Log.w(TAG, e);
+      }
+
+      renderFrame = false;
+      if (!animating || !advance) {
+        animating = false;
+        break;
+      }
+      try {
+        int delay = gifDecoder.getNextDelay();
+        // Sleep for frame duration minus time already spent on frame decode
+        // Actually we need next frame decode duration here,
+        // but I use previous frame time to make code more readable
+        delay -= frameDecodeTime;
+        if (delay > 0) {
+          Thread.sleep(framesDisplayDuration > 0 ? framesDisplayDuration : delay);
         }
-        gifDecoder.advance();
-        try {
-          int delay = gifDecoder.getNextDelay();
-          // Sleep for frame duration minus time already spent on frame decode
-          // Actually we need next frame decode duration here,
-          // but I use previous frame time to make code more readable
-          delay -= frameDecodeTime;
-          if (delay > 0) {
-            Thread.sleep(framesDisplayDuration > 0 ? framesDisplayDuration : delay);
-          }
-        } catch (final Exception e) {
-          // suppress any exception
-          // it can be InterruptedException or IllegalArgumentException
-        }
+      } catch (final InterruptedException e) {
+        // suppress exception
       }
     } while (animating);
+
+    if (shouldClear) {
+      handler.post(cleanupRunnable);
+    }
+    animationThread = null;
+
     if (animationStopCallback != null) {
       animationStopCallback.onAnimationStop();
     }
@@ -204,4 +212,10 @@ public class GifImageView extends ImageView implements Runnable {
     clear();
   }
 
+  private void startAnimationThread() {
+    if (canStart()) {
+      animationThread = new Thread(this);
+      animationThread.start();
+    }
+  }
 }
