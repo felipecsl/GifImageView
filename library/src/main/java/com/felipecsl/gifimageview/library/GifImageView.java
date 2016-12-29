@@ -21,6 +21,7 @@ public class GifImageView extends ImageView implements Runnable {
   private OnFrameAvailable frameCallback = null;
   private long framesDisplayDuration = -1L;
   private OnAnimationStop animationStopCallback = null;
+  private OnAnimationStart animationStartCallback = null;
 
   private final Runnable updateResults = new Runnable() {
     @Override
@@ -133,6 +134,10 @@ public class GifImageView extends ImageView implements Runnable {
   }
 
   @Override public void run() {
+    if (animationStartCallback != null) {
+      animationStartCallback.onAnimationStart();
+    }
+	
     do {
       if (!animating && !renderFrame) {
         break;
@@ -201,9 +206,17 @@ public class GifImageView extends ImageView implements Runnable {
   public void setOnAnimationStop(OnAnimationStop animationStop) {
     this.animationStopCallback = animationStop;
   }
+  
+  public void setOnAnimationStart(OnAnimationStart animationStart) {
+    this.animationStartCallback = animationStart;
+  }
 
   public interface OnAnimationStop {
     void onAnimationStop();
+  }
+  
+  public interface OnAnimationStart {
+    void onAnimationStart();
   }
 
   @Override
