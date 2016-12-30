@@ -102,6 +102,8 @@ class GifDecoder {
   // Global File Header values and parsing flags.
   // Active color table.
   private int[] act;
+  // Private color table that can be modified if needed.
+  private final int[] pct = new int[256];
 
   // Raw GIF data from input source.
   private ByteBuffer rawData;
@@ -362,51 +364,35 @@ class GifDecoder {
     status = STATUS_OK;
 
     GifFrame currentFrame = header.frames.get(framePointer);
-    GifFrame previousFrame;
+    GifFrame previousFrame = null;
     int previousIndex = framePointer - 1;
     if (previousIndex >= 0) {
       previousFrame = header.frames.get(previousIndex);
-    } else {
-      previousFrame = header.frames.get(getFrameCount() - 1);
     }
-
-    final int savedBgColor = header.bgColor;
 
     // Set the appropriate color table.
-    if (currentFrame.lct == null) {
-      act = header.gct;
-    } else {
-      act = currentFrame.lct;
-      if (header.bgIndex == currentFrame.transIndex) {
-        header.bgColor = 0;
-      }
-    }
-
-    int save = 0;
-    if (currentFrame.transparency) {
-      save = act[currentFrame.transIndex];
-      // Set transparent color if specified.
-      act[currentFrame.transIndex] = 0;
-    }
+    act = currentFrame.lct != null ? currentFrame.lct : header.gct;
     if (act == null) {
       if (Log.isLoggable(TAG, Log.DEBUG)) {
-        Log.d(TAG, "No Valid Color Table");
+        Log.d(TAG, "No Valid Color Table for frame #" + framePointer);
       }
       // No color table defined.
       status = STATUS_FORMAT_ERROR;
       return null;
     }
 
-    // Transfer pixel data to image.
-    Bitmap result = setPixels(currentFrame, previousFrame);
-
     // Reset the transparent pixel in the color table
     if (currentFrame.transparency) {
-      act[currentFrame.transIndex] = save;
+      // Prepare local copy of color table ("pct = act"), see #1068
+      System.arraycopy(act, 0, pct, 0, act.length);
+      // Forget about act reference from shared header object, use copied version
+      act = pct;
+      // Set transparent color if specified.
+      act[currentFrame.transIndex] = 0;
     }
-    header.bgColor = savedBgColor;
 
-    return result;
+    // Transfer pixel data to image.
+    return setPixels(currentFrame, previousFrame);
   }
 
   /**
@@ -502,14 +488,12 @@ class GifDecoder {
     }
 
     this.sampleSize = sampleSize;
-    // Now that we know the size, init scratch arrays.
-    // TODO: Find a way to avoid this entirely or at least downsample it
-    // (either should be possible).
-    mainPixels = bitmapProvider.obtainByteArray(header.width * header.height);
-    mainScratch =
-        bitmapProvider.obtainIntArray((header.width / sampleSize) * (header.height / sampleSize));
     downsampledWidth = header.width / sampleSize;
     downsampledHeight = header.height / sampleSize;
+    // Now that we know the size, init scratch arrays.
+    // TODO Find a way to avoid this entirely or at least downsample it (either should be possible).
+    mainPixels = bitmapProvider.obtainByteArray(header.width * header.height);
+    mainScratch = bitmapProvider.obtainIntArray(downsampledWidth * downsampledHeight);
   }
 
   private GifHeaderParser getHeaderParser() {
@@ -542,6 +526,11 @@ class GifDecoder {
     // Final location of blended pixels.
     final int[] dest = mainScratch;
 
+    // clear all pixels when meet first frame
+    if (previousFrame == null) {
+      Arrays.fill(dest, 0);
+    }
+
     // fill in starting image contents based on last image's dispose code
     if (previousFrame != null && previousFrame.dispose > DISPOSAL_UNSPECIFIED) {
       // We don't need to do anything for DISPOSAL_NONE, if it has the correct pixels so will our
@@ -551,21 +540,33 @@ class GifDecoder {
         int c = 0;
         if (!currentFrame.transparency) {
           c = header.bgColor;
+          if (currentFrame.lct != null && header.bgIndex == currentFrame.transIndex) {
+            c = 0;
+          }
         } else if (framePointer == 0) {
           // TODO: We should check and see if all individual pixels are replaced. If they are, the
           // first frame isn't actually transparent. For now, it's simpler and safer to assume
           // drawing a transparent background means the GIF contains transparency.
           isFirstFrameTransparent = true;
         }
-        Arrays.fill(dest, c);
-      } else if (previousFrame.dispose == DISPOSAL_PREVIOUS && previousImage != null) {
-        // Start with the previous frame
-        previousImage.getPixels(dest, 0, downsampledWidth, 0, 0, downsampledWidth,
-            downsampledHeight);
+        fillRect(dest, previousFrame, c);
+      } else if (previousFrame.dispose == DISPOSAL_PREVIOUS) {
+        if (previousImage == null) {
+          fillRect(dest, previousFrame, 0);
+        } else {
+          // Start with the previous frame
+          int downsampledIH = previousFrame.ih / sampleSize;
+          int downsampledIY = previousFrame.iy / sampleSize;
+          int downsampledIW = previousFrame.iw / sampleSize;
+          int downsampledIX = previousFrame.ix / sampleSize;
+          int topLeft = downsampledIY * downsampledWidth + downsampledIX;
+          previousImage.getPixels(dest, topLeft, downsampledWidth,
+              downsampledIX, downsampledIY, downsampledIW, downsampledIH);
+        }
       }
     }
 
-    // Decode pixels for this frame  into the global pixels[] scratch.
+    // Decode pixels for this frame into the global pixels[] scratch.
     decodeBitmapData(currentFrame);
 
     int downsampledIH = currentFrame.ih / sampleSize;
@@ -617,7 +618,15 @@ class GifDecoder {
         int maxPositionInSource = sx + ((dlim - dx) * sampleSize);
         while (dx < dlim) {
           // Map color and insert in destination.
-          int averageColor = averageColorsNear(sx, maxPositionInSource, currentFrame.iw);
+          int averageColor;
+          if (sampleSize == 1) {
+            int currentColorIndex = ((int) mainPixels[sx]) & 0x000000ff;
+            averageColor = act[currentColorIndex];
+          } else {
+            // TODO: This is substantially slower (up to 50ms per frame) than just grabbing the
+            // current color index above, even with a sample size of 1.
+            averageColor = averageColorsNear(sx, maxPositionInSource, currentFrame.iw);
+          }
           if (averageColor != 0) {
             dest[dx] = averageColor;
           } else if (!isFirstFrameTransparent && isFirstFrame) {
@@ -643,6 +652,22 @@ class GifDecoder {
     Bitmap result = getNextBitmap();
     result.setPixels(dest, 0, downsampledWidth, 0, 0, downsampledWidth, downsampledHeight);
     return result;
+  }
+
+  private void fillRect(int[] dest, GifFrame frame, int bgColor) {
+    // The area used by the graphic must be restored to the background color.
+    int downsampledIH = frame.ih / sampleSize;
+    int downsampledIY = frame.iy / sampleSize;
+    int downsampledIW = frame.iw / sampleSize;
+    int downsampledIX = frame.ix / sampleSize;
+    int topLeft = downsampledIY * downsampledWidth + downsampledIX;
+    int bottomLeft = topLeft + downsampledIH * downsampledWidth;
+    for (int left = topLeft; left < bottomLeft; left += downsampledWidth) {
+      int right = left + downsampledIW;
+      for (int pointer = left; pointer < right; pointer++) {
+        dest[pointer] = bgColor;
+      }
+    }
   }
 
   private int averageColorsNear(int positionInMainPixels, int maxPositionInMainPixels,
