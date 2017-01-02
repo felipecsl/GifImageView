@@ -535,7 +535,8 @@ class GifDecoder {
     if (previousFrame != null && previousFrame.dispose > DISPOSAL_UNSPECIFIED) {
       // We don't need to do anything for DISPOSAL_NONE, if it has the correct pixels so will our
       // mainScratch and therefore so will our dest array.
-      if (previousFrame.dispose == DISPOSAL_BACKGROUND) {
+      if (previousFrame.dispose == DISPOSAL_BACKGROUND ||
+          previousFrame.dispose == DISPOSAL_PREVIOUS && previousImage == null) {
         // Start with a canvas filled with the background color
         int c = 0;
         if (!currentFrame.transparency) {
