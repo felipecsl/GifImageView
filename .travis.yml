@@ -1,23 +1,22 @@
 language: android
 android:
   components:
-  - tools
-  - platform-tools
-  - build-tools-25.0.2
-  - android-25
-  - extra-android-m2repository
-  - extra-android-support
-  - extra-google-m2repository
+    - tools
+    - platform-tools
+    - build-tools-27.0.1
+    - android-27
+    - extra-android-m2repository
+    - extra-android-support
+    - extra-google-m2repository
 after_success:
-- ".buildscript/deploy_snapshot.sh"
+  - ".buildscript/deploy_snapshot.sh"
 jdk:
-- oraclejdk8
+  - oraclejdk8
 branches:
   except:
   - gh-pages
 notifications:
   email: false
-script: "./gradlew clean check"
 sudo: false
 cache:
   directories:
