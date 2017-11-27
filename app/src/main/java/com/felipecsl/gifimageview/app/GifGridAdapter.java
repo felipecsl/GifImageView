@@ -13,9 +13,8 @@ import com.felipecsl.gifimageview.library.GifImageView;
 import java.util.List;
 
 public class GifGridAdapter extends BaseAdapter {
-
-  private Context context;
-  private List<String> imageUrls;
+  private final Context context;
+  private final List<String> imageUrls;
 
   public GifGridAdapter(Context context, List<String> imageUrls) {
     this.context = context;
@@ -60,5 +59,4 @@ public class GifGridAdapter extends BaseAdapter {
     }.execute(imageUrls.get(position));
     return imageView;
   }
-
 }

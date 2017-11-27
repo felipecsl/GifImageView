@@ -25,10 +25,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    gifImageView = (GifImageView) findViewById(R.id.gifImageView);
-    btnToggle = (Button) findViewById(R.id.btnToggle);
-    btnBlur = (Button) findViewById(R.id.btnBlur);
-    final Button btnClear = (Button) findViewById(R.id.btnClear);
+    gifImageView = findViewById(R.id.gifImageView);
+    btnToggle = findViewById(R.id.btnToggle);
+    btnBlur = findViewById(R.id.btnBlur);
+    final Button btnClear = findViewById(R.id.btnClear);
 
     blur = Blur.newInstance(this);
     gifImageView.setOnFrameAvailable(new GifImageView.OnFrameAvailable() {
