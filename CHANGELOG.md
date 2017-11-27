@@ -1,3 +1,11 @@
+# 2.2.0 (11/27/2017)
+
+* New (#66): Expose `GifDecoder#getFrameCount`
+* New (#65): Bump compile and target SDK versions to 27, `minSdkVersion` is now 14
+* Fix (#58): Apply latest changes from Glide's `GifDecoder`, fix `DISPOSE_BACKGROUND` and `DISPOSE_PREVIOUS`
+* New (#57): Added `OnAnimationStart` callback
+* New (#35): Added support for GIFs with a loop count specified
+
 # 2.1.0 (06/22/2016)
 
 * Fix (#34): Clear animation when detached from the window
