@@ -9,7 +9,6 @@ import android.util.Log;
 import android.widget.ImageView;
 
 public class GifImageView extends ImageView implements Runnable {
-
   private static final String TAG = "GifDecoderView";
   private GifDecoder gifDecoder;
   private Bitmap tmpBitmap;
@@ -60,7 +59,7 @@ public class GifImageView extends ImageView implements Runnable {
       return;
     }
 
-    if(animating){
+    if (animating) {
       startAnimationThread();
     } else {
       gotoFrame(0);
@@ -76,7 +75,7 @@ public class GifImageView extends ImageView implements Runnable {
    * #startAnimation()}
    *
    * @param framesDisplayDuration Duration in milliseconds. Default value = -1, this property will
-   *                              be ignored and default delay from gif file will be used.
+   * be ignored and default delay from gif file will be used.
    */
   public void setFramesDisplayDuration(long framesDisplayDuration) {
     this.framesDisplayDuration = framesDisplayDuration;
@@ -100,15 +99,15 @@ public class GifImageView extends ImageView implements Runnable {
     }
   }
 
-  public void gotoFrame(int frame){
-    if(gifDecoder.getCurrentFrameIndex() == frame) return;
-    if(gifDecoder.setFrameIndex(frame-1) && !animating){
+  public void gotoFrame(int frame) {
+    if (gifDecoder.getCurrentFrameIndex() == frame) return;
+    if (gifDecoder.setFrameIndex(frame - 1) && !animating) {
       renderFrame = true;
       startAnimationThread();
     }
   }
 
-  public void resetAnimation(){
+  public void resetAnimation() {
     gifDecoder.resetLoopIndex();
     gotoFrame(0);
   }
@@ -129,6 +128,15 @@ public class GifImageView extends ImageView implements Runnable {
     return gifDecoder.getWidth();
   }
 
+  /**
+   * Gets the number of frames read from file.
+   *
+   * @return frame count.
+   */
+  public int getFrameCount() {
+    return gifDecoder.getFrameCount();
+  }
+
   public int getGifHeight() {
     return gifDecoder.getHeight();
   }
@@ -137,7 +145,7 @@ public class GifImageView extends ImageView implements Runnable {
     if (animationStartCallback != null) {
       animationStartCallback.onAnimationStart();
     }
-	
+
     do {
       if (!animating && !renderFrame) {
         break;
@@ -206,7 +214,7 @@ public class GifImageView extends ImageView implements Runnable {
   public void setOnAnimationStop(OnAnimationStop animationStop) {
     this.animationStopCallback = animationStop;
   }
-  
+
   public void setOnAnimationStart(OnAnimationStart animationStart) {
     this.animationStartCallback = animationStart;
   }
@@ -214,7 +222,7 @@ public class GifImageView extends ImageView implements Runnable {
   public interface OnAnimationStop {
     void onAnimationStop();
   }
-  
+
   public interface OnAnimationStart {
     void onAnimationStart();
   }
