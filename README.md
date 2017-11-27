@@ -1,5 +1,4 @@
-GifImageView
-============
+# GifImageView
 
 Android ImageView that handles Animated GIF images
 
@@ -12,31 +11,27 @@ In your ``build.gradle`` file:
 
 ```groovy
 dependencies {
-    compile 'com.felipecsl:gifimageview:2.1.0'
+  compile 'com.felipecsl:gifimageview:2.2.0'
 }
 ```
 
-In your Activity class:
+In your `Activity` class:
 
 ```java
-@Override
-protected void onCreate(final Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    gifView = (GifImageView) findViewById(R.id.gifImageView);
-    gifView.setBytes(bitmapData);
+@Override protected void onCreate(final Bundle savedInstanceState) {
+  super.onCreate(savedInstanceState);
+  gifView = findViewById(R.id.gifImageView);
+  gifView.setBytes(bitmapData);
 }
 
-@Override
-protected void onStart() {
-    super.onStart();
-    gifView.startAnimation();
+@Override protected void onStart() {
+  super.onStart();
+  gifView.startAnimation();
 }
 
-@Override
-protected void onStop() {
-    super.onStop();
-    gifView.stopAnimation();
+@Override protected void onStop() {
+  super.onStop();
+  gifView.stopAnimation();
 }
 ```
 
@@ -45,10 +40,9 @@ You can see an example of that in the sample app included on the repository.
 
 ```java
 gifImageView.setOnFrameAvailable(new GifImageView.OnFrameAvailable() {
-    @Override
-    public Bitmap onFrameAvailable(Bitmap bitmap) {
-        return blurFilter.blur(bitmap);
-    }
+  @Override public Bitmap onFrameAvailable(Bitmap bitmap) {
+    return blurFilter.blur(bitmap);
+  }
 });
 ```
 
@@ -73,5 +67,5 @@ Snapshots of the development version are available in [Sonatype's `snapshots` re
 
 ### Copyright and license
 
-Code and documentation copyright 2011-2015 Felipe Lima.
+Code and documentation copyright 2011- Felipe Lima.
 Code released under the [MIT license](https://github.com/felipecsl/GifImageView/blob/master/LICENSE.txt).
