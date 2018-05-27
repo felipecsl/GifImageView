@@ -25,7 +25,7 @@ public class GifImageView extends ImageView implements Runnable {
   private final Runnable updateResults = new Runnable() {
     @Override
     public void run() {
-      if (tmpBitmap != null && !tmpBitmap.isRecycled()) {
+      if (animating && tmpBitmap != null && !tmpBitmap.isRecycled()) {
         setImageBitmap(tmpBitmap);
       }
     }
