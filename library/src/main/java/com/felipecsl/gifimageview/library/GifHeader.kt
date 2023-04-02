@@ -16,60 +16,61 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.felipecsl.gifimageview.library;
+package com.felipecsl.gifimageview.library
 
-import java.util.ArrayList;
-import java.util.List;
+
+import kotlin.collections.ArrayList
 
 /**
  * A header object containing the number of frames in an animated GIF image as well as basic
  * metadata like width and height that can be used to decode each individual frame of the GIF. Can
- * be shared by one or more {@link GifDecoder}s to play the same animated GIF in multiple views.
+ * be shared by one or more [GifDecoder]s to play the same animated GIF in multiple views.
  */
-public class GifHeader {
+class GifHeader {
+    @JvmField
+    var gct: IntArray? = null
 
-  int[] gct = null;
-  int status = GifDecoder.STATUS_OK;
-  int frameCount = 0;
+    /**
+     * Global status code of GIF data parsing.
+     */
+    @JvmField
+    var status = GifDecoder.STATUS_OK
+    var numFrames = 0
+    @JvmField
+    var currentFrame: GifFrame? = null
+    @JvmField
+    var frames: ArrayList<GifFrame> = ArrayList()
 
-  GifFrame currentFrame;
-  List<GifFrame> frames = new ArrayList<>();
-  // Logical screen size.
-  // Full image width.
-  int width;
-  // Full image height.
-  int height;
+    // Logical screen size.
+    // Full image width.
+    @JvmField
+    var width = 0
 
-  // 1 : global color table flag.
-  boolean gctFlag;
-  // 2-4 : color resolution.
-  // 5 : gct sort flag.
-  // 6-8 : gct size.
-  int gctSize;
-  // Background color index.
-  int bgIndex;
-  // Pixel aspect ratio.
-  int pixelAspect;
-  //TODO: this is set both during reading the header and while decoding frames...
-  int bgColor;
-  int loopCount = 0;
+    // Full image height.
+    @JvmField
+    var height = 0
 
-  public int getHeight() {
-    return height;
-  }
+    // 1 : global color table flag.
+    @JvmField
+    var gctFlag = false
 
-  public int getWidth() {
-    return width;
-  }
+    // 2-4 : color resolution.
+    // 5 : gct sort flag.
+    // 6-8 : gct size.
+    @JvmField
+    var gctSize = 0
 
-  public int getNumFrames() {
-    return frameCount;
-  }
+    // Background color index.
+    @JvmField
+    var bgIndex = 0
 
-  /**
-   * Global status code of GIF data parsing.
-   */
-  public int getStatus() {
-    return status;
-  }
+    // Pixel aspect ratio.
+    @JvmField
+    var pixelAspect = 0
+
+    //TODO: this is set both during reading the header and while decoding frames...
+    @JvmField
+    var bgColor = 0
+    @JvmField
+    var loopCount = 0
 }

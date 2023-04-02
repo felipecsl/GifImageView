@@ -16,39 +16,60 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.felipecsl.gifimageview.library;
+package com.felipecsl.gifimageview.library
 
 /**
  * Inner model class housing metadata for each frame.
  */
 class GifFrame {
-  int ix, iy, iw, ih;
-  /**
-   * Control Flag.
-   */
-  boolean interlace;
-  /**
-   * Control Flag.
-   */
-  boolean transparency;
-  /**
-   * Disposal Method.
-   */
-  int dispose;
-  /**
-   * Transparency Index.
-   */
-  int transIndex;
-  /**
-   * Delay, in ms, to next frame.
-   */
-  int delay;
-  /**
-   * Index in the raw buffer where we need to start reading to decode.
-   */
-  int bufferFrameStart;
-  /**
-   * Local Color Table.
-   */
-  int[] lct;
+    @JvmField
+    var ix = 0
+    @JvmField
+    var iy = 0
+    @JvmField
+    var iw = 0
+    @JvmField
+    var ih = 0
+
+    /**
+     * Control Flag.
+     */
+    @JvmField
+    var interlace = false
+
+    /**
+     * Control Flag.
+     */
+    @JvmField
+    var transparency = false
+
+    /**
+     * Disposal Method.
+     */
+    @JvmField
+    var dispose = 0
+
+    /**
+     * Transparency Index.
+     */
+    @JvmField
+    var transIndex = 0
+
+    /**
+     * Delay, in ms, to next frame.
+     */
+    @JvmField
+    var delay = 0
+
+    /**
+     * Index in the raw buffer where we need to start reading to decode.
+     */
+    @JvmField
+    var bufferFrameStart = 0
+
+    /**
+     * Local Color Table.
+     */
+    @JvmField
+    var lct: IntArray? = null
 }

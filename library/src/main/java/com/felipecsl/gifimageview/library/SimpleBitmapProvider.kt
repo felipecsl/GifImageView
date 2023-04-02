@@ -1,32 +1,30 @@
-package com.felipecsl.gifimageview.library;
+package com.felipecsl.gifimageview.library
 
-import android.graphics.Bitmap;
+import android.graphics.Bitmap
+import com.felipecsl.gifimageview.library.GifDecoder.BitmapProvider
 
-import androidx.annotation.NonNull;
+internal class SimpleBitmapProvider : BitmapProvider {
+    override fun obtain(width: Int, height: Int, config: Bitmap.Config?): Bitmap {
+        return Bitmap.createBitmap(width, height, config)
+    }
 
-final class SimpleBitmapProvider implements GifDecoder.BitmapProvider {
-  @NonNull
-  @Override public Bitmap obtain(int width, int height, Bitmap.Config config) {
-    return Bitmap.createBitmap(width, height, config);
-  }
+    override fun release(bitmap: Bitmap?) {
+        bitmap!!.recycle()
+    }
 
-  @Override public void release(Bitmap bitmap) {
-    bitmap.recycle();
-  }
+    override fun obtainByteArray(size: Int): ByteArray? {
+        return ByteArray(size)
+    }
 
-  @Override public byte[] obtainByteArray(int size) {
-    return new byte[size];
-  }
+    override fun release(bytes: ByteArray?) {
+        // no-op
+    }
 
-  @Override public void release(byte[] bytes) {
-    // no-op
-  }
+    override fun obtainIntArray(size: Int): IntArray? {
+        return IntArray(size)
+    }
 
-  @Override public int[] obtainIntArray(int size) {
-    return new int[size];
-  }
-
-  @Override public void release(int[] array) {
-    // no-op
-  }
+    override fun release(array: IntArray?) {
+        // no-op
+    }
 }
