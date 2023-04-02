@@ -22,9 +22,10 @@ package com.felipecsl.gifimageview.library;
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -114,7 +115,8 @@ class GifDecoder {
   // Temporary buffer for block reading. Reads 16k chunks from the native buffer for processing,
   // to greatly reduce JNI overhead.
   private static final int WORK_BUFFER_SIZE = 16384;
-  @Nullable private byte[] workBuffer;
+  @Nullable
+  private byte[] workBuffer;
   private int workBufferSize = 0;
   private int workBufferPosition = 0;
 

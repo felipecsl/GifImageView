@@ -1,36 +1,53 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlinx-serialization'
 
 android {
-  compileSdkVersion 27
-  buildToolsVersion "27.0.2"
+    compileSdkVersion 33
 
-  defaultConfig {
-    minSdkVersion 14
-    targetSdkVersion 27
-    versionCode 1
-    versionName "1.0"
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
 
-    renderscriptTargetApi 19
-    renderscriptSupportModeEnabled true
-  }
-  lintOptions {
-    disable 'InvalidPackage'
-  }
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_7
-    targetCompatibility JavaVersion.VERSION_1_7
-  }
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        renderscriptTargetApi 19
+        renderscriptSupportModeEnabled true
     }
-  }
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
 }
 
 dependencies {
-  implementation 'com.android.support:appcompat-v7:27.1.1'
-  implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-  implementation 'commons-io:commons-io:2.6'
-  api project(':library')
+
+    api project(':library')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.10"
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'commons-io:commons-io:2.6'
 }

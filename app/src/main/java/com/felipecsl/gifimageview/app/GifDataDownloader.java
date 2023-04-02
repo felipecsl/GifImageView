@@ -1,22 +1,30 @@
 package com.felipecsl.gifimageview.app;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
-public class GifDataDownloader extends AsyncTask<String, Void, byte[]> {
+public class GifDataDownloader {
   private static final String TAG = "GifDataDownloader";
 
-  @Override protected byte[] doInBackground(final String... params) {
-    final String gifUrl = params[0];
+  public interface GifDataDownloaderCallback {
+    void onGifDownloaded(byte[] gifData);
+  }
 
+  public static void downloadGifData(final String gifUrl, final GifDataDownloaderCallback callback) {
     if (gifUrl == null)
-      return null;
+      return;
 
-    try {
-      return ByteArrayHttpClient.get(gifUrl);
-    } catch (OutOfMemoryError e) {
-      Log.e(TAG, "GifDecode OOM: " + gifUrl, e);
-      return null;
-    }
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          final byte[] gifData = ByteArrayHttpClient.get(gifUrl);
+          if (callback != null) {
+            callback.onGifDownloaded(gifData);
+          }
+        } catch (OutOfMemoryError e) {
+          Log.e(TAG, "GifDecode OOM: " + gifUrl, e);
+        }
+      }
+    }).start();
   }
 }

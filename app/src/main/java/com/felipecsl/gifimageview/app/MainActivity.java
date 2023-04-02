@@ -1,15 +1,17 @@
 package com.felipecsl.gifimageview.app;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.felipecsl.gifimageview.library.GifImageView;
 
@@ -55,14 +57,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     btnClear.setOnClickListener(this);
     btnBlur.setOnClickListener(this);
 
-    new GifDataDownloader() {
-      @Override protected void onPostExecute(final byte[] bytes) {
+    GifDataDownloader.downloadGifData("https://i0.wp.com/www.printmag.com/wp-content/uploads/2021/02/4cbe8d_f1ed2800a49649848102c68fc5a66e53mv2.gif?fit=476%2C280&ssl=1", new GifDataDownloader.GifDataDownloaderCallback() {
+      @Override
+      public void onGifDownloaded(byte[] bytes) {
+        // Do something with the downloaded GIF data
         gifImageView.setBytes(bytes);
         gifImageView.startAnimation();
         Log.d(TAG, "GIF width is " + gifImageView.getGifWidth());
         Log.d(TAG, "GIF height is " + gifImageView.getGifHeight());
       }
-    }.execute("http://katemobile.ru/tmp/sample3.gif");
+    });
+
   }
 
 

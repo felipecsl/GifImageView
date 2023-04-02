@@ -1,6 +1,7 @@
 package com.felipecsl.gifimageview.app;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -50,13 +51,16 @@ public class GifGridAdapter extends BaseAdapter {
       imageView = (GifImageView) convertView;
       imageView.clear();
     }
-    new GifDataDownloader() {
+
+    GifDataDownloader.downloadGifData(imageUrls.get(position), new GifDataDownloader.GifDataDownloaderCallback() {
       @Override
-      protected void onPostExecute(final byte[] bytes) {
+      public void onGifDownloaded(byte[] bytes) {
+        // Do something with the downloaded GIF data
         imageView.setBytes(bytes);
         imageView.startAnimation();
       }
-    }.execute(imageUrls.get(position));
+    });
+
     return imageView;
   }
 }
