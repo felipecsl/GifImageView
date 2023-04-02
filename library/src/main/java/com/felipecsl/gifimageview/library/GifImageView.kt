@@ -96,7 +96,7 @@ class GifImageView : AppCompatImageView, Runnable {
         renderFrame = false
         shouldClear = true
         stopAnimation()
-        myHandler .post(cleanupRunnable)
+        myHandler.post(cleanupRunnable)
     }
 
     private fun canStart(): Boolean {

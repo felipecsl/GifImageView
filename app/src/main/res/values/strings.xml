@@ -2,7 +2,13 @@
 <resources>
 
     <string name="app_name">GifImageView Demo</string>
-
     <string name="grid_example">Grid Example</string>
+
+    <string name="stop_gif">Stop Gif</string>
+    <string name="start_gif">Start Gif</string>
+    <string name="clear_gif">Clear Gif</string>
+    <string name="blur_gif">Blur Gif</string>
+
+    <string name="gif_url">https://i0.wp.com/www.printmag.com/wp-content/uploads/2021/02/4cbe8d_f1ed2800a49649848102c68fc5a66e53mv2.gif?fit=476%2C280&amp;ssl=1</string>
 
 </resources>

@@ -2,14 +2,14 @@ package com.felipecsl.gifimageview.app
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import com.felipecsl.gifimageview.app.Blur.Companion.newInstance
 import com.felipecsl.gifimageview.app.GifDataDownloader.GifDataDownloaderCallback
 import com.felipecsl.gifimageview.app.GifDataDownloader.downloadGifData
@@ -17,20 +17,25 @@ import com.felipecsl.gifimageview.library.GifImageView
 import com.felipecsl.gifimageview.library.GifImageView.OnAnimationStop
 import com.felipecsl.gifimageview.library.GifImageView.OnFrameAvailable
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity() {
+
     private var gifImageView: GifImageView? = null
-    private var btnToggle: Button? = null
-    private var btnBlur: Button? = null
+    private var btnToggle: AppCompatButton? = null
+    private var btnBlur: AppCompatButton? = null
+    private var btnClear: AppCompatButton? = null
     private var shouldBlur = false
     private var blur: Blur? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         gifImageView = findViewById(R.id.gifImageView)
         btnToggle = findViewById(R.id.btnToggle)
         btnBlur = findViewById(R.id.btnBlur)
-        val btnClear = findViewById<Button>(R.id.btnClear)
+        btnClear = findViewById(R.id.btnClear)
         blur = newInstance(this)
+
         gifImageView?.onFrameAvailable = object : OnFrameAvailable {
             override fun onFrameAvailable(bitmap: Bitmap?): Bitmap? {
                 return if (shouldBlur) {
@@ -38,6 +43,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 } else bitmap
             }
         }
+
         gifImageView?.onAnimationStop = object : OnAnimationStop {
             override fun onAnimationStop() {
                 runOnUiThread {
@@ -49,11 +55,27 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
-        btnToggle?.setOnClickListener(this)
-        btnClear.setOnClickListener(this)
-        btnBlur?.setOnClickListener(this)
+        initClicks()
+        initViewGif()
+        setStyle()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.show_grid) {
+            //startActivity(Intent(this, GridViewActivity::class.java))
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun initViewGif() {
         downloadGifData(
-            "https://i0.wp.com/www.printmag.com/wp-content/uploads/2021/02/4cbe8d_f1ed2800a49649848102c68fc5a66e53mv2.gif?fit=476%2C280&ssl=1",
+            getString(R.string.gif_url),
             object : GifDataDownloaderCallback {
                 override fun onGifDownloaded(bytes: ByteArray?) {
                     // Do something with the downloaded GIF data
@@ -65,30 +87,34 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.show_grid) {
-            startActivity(Intent(this, GridViewActivity::class.java))
-            return true
+    private fun initClicks() {
+        btnToggle?.setOnClickListener {
+            if (gifImageView?.isAnimating == true) {
+                gifImageView?.stopAnimation()
+                btnToggle?.text = getString(R.string.start_gif)
+            } else {
+                gifImageView?.startAnimation()
+                btnToggle?.text = getString(R.string.stop_gif)
+            }
         }
-        return super.onOptionsItemSelected(item)
-    }
 
-    override fun onClick(v: View) {
-        if (v == btnToggle) {
-            if (gifImageView!!.isAnimating) gifImageView!!.stopAnimation() else gifImageView!!.startAnimation()
-        } else if (v == btnBlur) {
-            shouldBlur = !shouldBlur
-        } else {
-            gifImageView!!.clear()
-        }
+        btnClear?.setOnClickListener { gifImageView?.clear() }
+
+        btnBlur?.setOnClickListener { shouldBlur = !shouldBlur }
     }
 
     companion object {
         private const val TAG = "MainActivity"
+    }
+
+    private fun setStyle(){
+        btnToggle?.setBackgroundColor(Color.parseColor("#ff9e22"))
+        btnBlur?.setBackgroundColor(Color.parseColor("#cd00ea"))
+        btnClear?.setBackgroundColor(Color.parseColor("#D50000"))
+
+
+        btnToggle?.setTextColor(Color.parseColor("#F3E5F5"))
+        btnBlur?.setTextColor(Color.parseColor("#F3E5F5"))
+        btnClear?.setTextColor(Color.parseColor("#F3E5F5"))
     }
 }
