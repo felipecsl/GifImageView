@@ -1,66 +1,49 @@
-package com.felipecsl.gifimageview.app;
+package com.felipecsl.gifimageview.app
 
-import android.content.Context;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
+import android.content.Context
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AbsListView
+import android.widget.BaseAdapter
+import android.widget.ImageView
+import com.felipecsl.gifimageview.app.GifDataDownloader.GifDataDownloaderCallback
+import com.felipecsl.gifimageview.app.GifDataDownloader.downloadGifData
+import com.felipecsl.gifimageview.library.GifImageView
 
-import com.felipecsl.gifimageview.library.GifImageView;
-
-import java.util.List;
-
-public class GifGridAdapter extends BaseAdapter {
-  private final Context context;
-  private final List<String> imageUrls;
-
-  public GifGridAdapter(Context context, List<String> imageUrls) {
-    this.context = context;
-    this.imageUrls = imageUrls;
-  }
-
-  @Override
-  public int getCount() {
-    return imageUrls.size();
-  }
-
-  @Override
-  public Object getItem(int position) {
-    return imageUrls.get(position);
-  }
-
-  @Override
-  public long getItemId(int position) {
-    return 0;
-  }
-
-  @Override
-  public View getView(int position, View convertView, ViewGroup parent) {
-    final GifImageView imageView;
-    if (convertView == null) {
-      imageView = new GifImageView(context);
-      imageView.setScaleType(ImageView.ScaleType.CENTER);
-      imageView.setPadding(10, 10, 10, 10);
-      int size = AbsListView.LayoutParams.WRAP_CONTENT;
-      AbsListView.LayoutParams layoutParams = new GridView.LayoutParams(size, size);
-      imageView.setLayoutParams(layoutParams);
-    } else {
-      imageView = (GifImageView) convertView;
-      imageView.clear();
+class GifGridAdapter(private val context: Context, private val imageUrls: List<String>) :
+    BaseAdapter() {
+    override fun getCount(): Int {
+        return imageUrls.size
     }
 
-    GifDataDownloader.downloadGifData(imageUrls.get(position), new GifDataDownloader.GifDataDownloaderCallback() {
-      @Override
-      public void onGifDownloaded(byte[] bytes) {
-        // Do something with the downloaded GIF data
-        imageView.setBytes(bytes);
-        imageView.startAnimation();
-      }
-    });
+    override fun getItem(position: Int): Any {
+        return imageUrls[position]
+    }
 
-    return imageView;
-  }
+    override fun getItemId(position: Int): Long {
+        return 0
+    }
+
+    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+        val imageView: GifImageView
+        if (convertView == null) {
+            imageView = GifImageView(context)
+            imageView.scaleType = ImageView.ScaleType.CENTER
+            imageView.setPadding(10, 10, 10, 10)
+            val size = AbsListView.LayoutParams.WRAP_CONTENT
+            val layoutParams = AbsListView.LayoutParams(size, size)
+            imageView.layoutParams = layoutParams
+        } else {
+            imageView = convertView as GifImageView
+            imageView.clear()
+        }
+        downloadGifData(imageUrls[position], object : GifDataDownloaderCallback {
+            override fun onGifDownloaded(bytes: ByteArray?) {
+                // Do something with the downloaded GIF data
+                imageView.setBytes(bytes)
+                imageView.startAnimation()
+            }
+        })
+        return imageView
+    }
 }

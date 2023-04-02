@@ -1,30 +1,23 @@
-package com.felipecsl.gifimageview.app;
+package com.felipecsl.gifimageview.app
 
-import android.util.Log;
+import android.util.Log
 
-public class GifDataDownloader {
-  private static final String TAG = "GifDataDownloader";
+object GifDataDownloader {
+    private const val TAG = "GifDataDownloader"
+    @JvmStatic
+    fun downloadGifData(gifUrl: String?, callback: GifDataDownloaderCallback?) {
+        if (gifUrl == null) return
+        Thread {
+            try {
+                val gifData = ByteArrayHttpClient.get(gifUrl)
+                callback?.onGifDownloaded(gifData)
+            } catch (e: OutOfMemoryError) {
+                Log.e(TAG, "GifDecode OOM: $gifUrl", e)
+            }
+        }.start()
+    }
 
-  public interface GifDataDownloaderCallback {
-    void onGifDownloaded(byte[] gifData);
-  }
-
-  public static void downloadGifData(final String gifUrl, final GifDataDownloaderCallback callback) {
-    if (gifUrl == null)
-      return;
-
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          final byte[] gifData = ByteArrayHttpClient.get(gifUrl);
-          if (callback != null) {
-            callback.onGifDownloaded(gifData);
-          }
-        } catch (OutOfMemoryError e) {
-          Log.e(TAG, "GifDecode OOM: " + gifUrl, e);
-        }
-      }
-    }).start();
-  }
+    interface GifDataDownloaderCallback {
+        fun onGifDownloaded(gifData: ByteArray?)
+    }
 }
