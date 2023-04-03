@@ -11,7 +11,7 @@ In your ``build.gradle`` file:
 
 ```groovy
 dependencies {
-  compile 'com.felipecsl:gifimageview:2.2.0'
+    implementation 'com.felipecsl:gifimageview:2.2.0'
 }
 ```
 
